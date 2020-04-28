@@ -11,7 +11,7 @@ import Icon24Forward10 from '@vkontakte/icons/dist/24/forward_10';
 // import AnyChart from 'anychart-react'
 // import iconv from 'iconv-lite'
 // import Parser from 'rss-parser'
-import Pmf from './bayes'
+import { Pmf, Cookie } from './bayes'
 
 class App extends Component {
 	constructor(props) {
@@ -66,20 +66,34 @@ class App extends Component {
 				calc: `Байесовская вероятность что булочка из 1 корзины, если она ванильная ${((p_basket1_vanil) * 100).toFixed(2)}% `
 			})
 			localStorage.bayes = JSON.stringify(this.state);//сохраняем стейт в локалсторадже
-			const cooc=new Pmf()
-			cooc.set('Bowl1',0.5)
-			cooc.set('Bowl2',0.5)
-			cooc.mult('Bowl1',0.75)
-			cooc.mult('Bowl2',0.5)
-			// cooc.set('пов3',3)
-			// cooc.set('пов4',1)
-			// cooc.set('пов5',1)
-			// cooc.mult('пов3',0.2)
-			// cooc.mult('пов4',0.5)
-			// cooc.mult('пов5',0.3)
-			cooc.total()
-			cooc.normalize()
-			cooc.prob('Bowl1')
+			// const cooc=new Pmf()
+			// cooc.set('Bowl1',0.5)
+			// cooc.set('Bowl2',0.5)
+			// cooc.mult('Bowl1',0.75)
+			// cooc.mult('Bowl2',0.5)
+			// // cooc.set('пов3',3)
+			// // cooc.set('пов4',1)
+			// // cooc.set('пов5',1)
+			// // cooc.mult('пов3',0.2)
+			// // cooc.mult('пов4',0.5)
+			// // cooc.mult('пов5',0.3)
+			// cooc.total()
+			// cooc.normalize()
+			// cooc.prob('Bowl1')
+
+			let hypos = ['bowl11', 'bowl22'];
+			const mycooc = new Cookie(hypos)
+			let dataset = ['vanilla', 'chocolate', 'vanilla']
+			for (let data of dataset) {
+				console.log(`достаем ${data}`)
+				mycooc.update(data)
+				for (let hypo of hypos) {
+					mycooc.prob(hypo)
+				}
+			}
+
+			// console.log("вероятность "+"vanilla "+"bowl22 "+mycooc.likelyhood("vanilla","bowl22"))
+
 		} else {
 			this.setState({
 				vanil_basket1: '',

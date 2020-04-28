@@ -1,4 +1,4 @@
-export default class Pmf {
+class Pmf {
     constructor() {
         //   this.name = name;
         this.d = {};
@@ -18,7 +18,7 @@ export default class Pmf {
         }
         return p / (1 - p)
     }
-    Probability(o){
+    Probability(o) {
         // возвращает из шансов вероятность
         // Computes the probability corresponding to given odds.
         // Example: o=2 means 2:1 odds in favor, or 2/3 probability
@@ -26,13 +26,13 @@ export default class Pmf {
         // Returns: float probability
         return o / (o + 1)
     }
-    Probability2(yes, no){
+    Probability2(yes, no) {
         // возвращает вероятность из шансов 
-    // Computes the probability corresponding to given odds.
-    // Example: yes=2, no=1 means 2:1 odds in favor, or 2/3 probability.
-    // yes, no: int or float odds in favor
-    return (yes) / (yes + no)
-    } 
+        // Computes the probability corresponding to given odds.
+        // Example: yes=2, no=1 means 2:1 odds in favor, or 2/3 probability.
+        // yes, no: int or float odds in favor
+        return (yes) / (yes + no)
+    }
     set(name, prior) {
         this.d[name] = prior
         console.log(this.d)
@@ -47,7 +47,7 @@ export default class Pmf {
         for (let key in this.d) {
             total += this.d[key]
         }
-        console.log(total)
+        console.log(`сумма вероятностей ${total}`)
         return total
     }
     normalize(fraction = 1) {
@@ -60,18 +60,50 @@ export default class Pmf {
                 this.d[key] *= factor
             }
         }
-        console.log(this.d)
+        // console.log(`результат после нормализации ${this.d}`)
         return total
     }
-   prob(x){
-    // Gets the probability associated with the value x.
-    // Args:
-    //     x: number value
-    //     default: value to return if the key is not there
-    // Returns:
-    //     float probability
-    console.log(`вероятность гипотезы ${x} равна ${this.d[x]}`)
-    return this.d[x]
-   }
-   
+    prob(x) {
+        // Gets the probability associated with the value x.
+        // Args:
+        //     x: number value
+        //     default: value to return if the key is not there
+        // Returns:
+        //     float probability
+        console.log(`вероятность гипотезы ${x} равна ${this.d[x]}`)
+        return this.d[x]
+    }
 }
+
+class Cookie extends Pmf {
+    constructor(hypos) {
+        super()//инициализируем родительский конструктор в котором создаем обьект d с вероятностями
+        for (let hypo of hypos) {
+            this.set(hypo, 1)
+        }
+        this.normalize()
+    }
+    mixes = {
+        'bowl11': { "vanilla": 0.75, "chocolate": 0.25 },
+        'bowl22': { "vanilla": 0.5, "chocolate": 0.5 },
+    }
+    likelyhood(data, hypo) {
+        const mix = this.mixes[hypo]
+        const like = mix[data]
+        return like
+    }
+    update(data) {
+        // Updates the PMF with new data.
+        // data: string cookie type
+        for (let hypo of Object.keys(this.d)) {
+            let like = this.likelyhood(data, hypo)
+            this.mult(hypo, like)
+        }
+        this.normalize()
+    }
+
+
+}
+
+
+export { Pmf, Cookie }
