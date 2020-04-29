@@ -60,7 +60,7 @@ class Pmf {
                 this.d[key] *= factor
             }
         }
-        // console.log(`результат после нормализации ${this.d}`)
+        // console.log(`результат после нормализации сумма вероятностей ${total}`)
         return total
     }
     prob(x) {
@@ -78,15 +78,18 @@ class Pmf {
 class Cookie extends Pmf {
     constructor(hypos) {
         super()//инициализируем родительский конструктор в котором создаем обьект d с вероятностями
+        // для каждой гипотезы создаем вероятность, если число одинаковое то события равновероятны
         for (let hypo of hypos) {
             this.set(hypo, 1)
         }
         this.normalize()
     }
+    // задаем распределение в корзинах с булками
     mixes = {
         'bowl11': { "vanilla": 0.75, "chocolate": 0.25 },
         'bowl22': { "vanilla": 0.5, "chocolate": 0.5 },
     }
+    // получаем вероятность вытащить определенную булку для гипотезы по сути правдоподобие
     likelyhood(data, hypo) {
         const mix = this.mixes[hypo]
         const like = mix[data]
@@ -105,5 +108,43 @@ class Cookie extends Pmf {
 
 }
 
+class Monty extends Pmf {
+    constructor(hypos) {
+        super()//инициализируем родительский конструктор в котором создаем обьект d с вероятностями
+        for (let hypo of hypos) {
+            this.set(hypo, 1)
+        }
+        this.normalize()
+    }
 
-export { Pmf, Cookie }
+ /**
+ * Возвращает правдоподобие получить машину за дверью для гипотез 
+ * @param {string} data дверь которую можно открыть
+ * @param {string} hypo гипотеза за какой дверью машина
+ * @return {number} вероятность получить машину за дверью по сути правдоподобие
+ */
+    likelyhood(data, hypo) {
+        if (hypo === data) {//дверь которую открыли
+            return 0
+        } else if (hypo === 'A') {
+            return 0.5
+        } else {
+            return 1
+        }
+    }
+     /**
+ * Возвращает вероятность получить машину за дверью 
+ * @param {string} data дверь которую откроет монти
+ */
+    update(data) {
+        // Updates the PMF with new data.
+        // data: string cookie type
+        for (let hypo of Object.keys(this.d)) {
+            let like = this.likelyhood(data, hypo)
+            this.mult(hypo, like)
+        }
+        this.normalize()
+    }
+}
+
+export { Pmf, Cookie,Monty }
