@@ -11,7 +11,7 @@ import Icon24Forward10 from '@vkontakte/icons/dist/24/forward_10';
 // import AnyChart from 'anychart-react'
 // import iconv from 'iconv-lite'
 // import Parser from 'rss-parser'
-import { Pmf, Cookie, Monty, Suite, Monty2 } from './bayes'
+import { Pmf, Cookie, Monty, Suite, Monty2,M_and_M } from './bayes'
 
 class App extends Component {
 	constructor(props) {
@@ -103,13 +103,17 @@ class App extends Component {
 			// 					monty.prob(hypo)
 			// 				}
 
-			let hypos = ['A', 'B', 'C'];
-			let suite = new Monty2(hypos)
-			suite.update('B')
+			// let hypos = ['A', 'B', 'C'];
+			// let suite = new Monty2(hypos)
+			// suite.update('B')
+			// suite.print()
+
+			let hypos = ['A', 'B'];
+			let suite = new M_and_M(hypos)
+			suite.update(['bag1','yellow'])
+			suite.update(['bag2','green'])
 			suite.print()
 
-
-			
 
 		} else {
 			this.setState({

@@ -189,4 +189,24 @@ class Monty2 extends Suite {
         }
     }
 }
-export { Pmf, Cookie, Monty, Suite, Monty2 }
+class M_and_M extends Suite {
+    /**
+    * Возвращает (правдоподобие) получить драже определенного цвета для гипотезы 
+    * @param {[string,string]} data ['bag','color']
+    * @param {string} hypo гипотеза 'A' или 'B'
+    * @return {number} вероятность получить драже определенного цвета для гипотезы по сути правдоподобие
+    */
+    likelyhood(data, hypo) {
+        const mix94 = { "brown": 30, "yellow": 20, "red": 20, "green": 10, 'orange': 10, 'tan': 10 }
+        const mix96 = { "blue": 24, "green": 20, "orange": 16, "yellow": 14, 'red': 13, 'brown': 13 }
+        const hypoA = { bag1: mix94, bag2: mix96 }
+        const hypoB = { bag1: mix96, bag2: mix94 }
+        const hypotheses = { 'A': hypoA, 'B': hypoB }
+
+        const [bag, color] = data
+        const mix = hypotheses[hypo][bag]
+        const like = mix[color]
+        return like
+    }
+}
+export { Pmf, Cookie, Monty, Suite, Monty2,M_and_M }
