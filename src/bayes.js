@@ -35,11 +35,11 @@ class Pmf {
     }
     set(name, prior) {
         this.d[name] = prior
-        console.log(this.d)
+        // console.log(this.d)
     }
     mult(name, factor) {
         this.d[name] = this.d[name] * factor
-        console.log(this.d)
+        // console.log(this.d)
     }
     total() {
         // возвращает сумму вероятностей всех гипотез
@@ -47,7 +47,7 @@ class Pmf {
         for (let key in this.d) {
             total += this.d[key]
         }
-        console.log(`сумма вероятностей ${total}`)
+        // console.log(`сумма вероятностей ${total}`)
         return total
     }
     normalize(fraction = 1) {
@@ -117,12 +117,12 @@ class Monty extends Pmf {
         this.normalize()
     }
 
- /**
- * Возвращает правдоподобие получить машину за дверью для гипотез 
- * @param {string} data дверь которую можно открыть
- * @param {string} hypo гипотеза за какой дверью машина
- * @return {number} вероятность получить машину за дверью по сути правдоподобие
- */
+    /**
+    * Возвращает правдоподобие получить машину за дверью для гипотез 
+    * @param {string} data дверь которую можно открыть
+    * @param {string} hypo гипотеза за какой дверью машина
+    * @return {number} вероятность получить машину за дверью по сути правдоподобие
+    */
     likelyhood(data, hypo) {
         if (hypo === data) {//дверь которую открыли
             return 0
@@ -132,10 +132,10 @@ class Monty extends Pmf {
             return 1
         }
     }
-     /**
- * Возвращает вероятность получить машину за дверью 
- * @param {string} data дверь которую откроет монти
- */
+    /**
+    * Возвращает вероятность получить машину за дверью 
+    * @param {string} data дверь которую откроет монти
+    */
     update(data) {
         // Updates the PMF with new data.
         // data: string cookie type
@@ -147,4 +147,46 @@ class Monty extends Pmf {
     }
 }
 
-export { Pmf, Cookie,Monty }
+class Suite extends Pmf {
+    constructor(hypos) {
+        super()//инициализируем родительский конструктор в котором создаем обьект d с вероятностями
+        for (let hypo of hypos) {
+            this.set(hypo, 1)
+        }
+        this.normalize()
+    }
+    /**
+     * Изменяет каждую гипотезу на основе новых данных 
+     * @param {string} data данные которые меняют вероятность гипотезы
+     */
+    update(data) {
+        // Updates the PMF with new data.
+        // data: string cookie type
+        for (let hypo of Object.keys(this.d)) {
+            let like = this.likelyhood(data, hypo)
+            this.mult(hypo, like)
+        }
+        this.normalize()
+    }
+    /**
+        * выводит вероятности гипотез
+        */
+    print() {
+        for (let hypo of Object.keys(this.d)) {
+            this.prob(hypo)
+        }
+    }
+}
+
+class Monty2 extends Suite {
+    likelyhood(data, hypo) {
+        if (hypo === data) {//дверь которую открыли
+            return 0
+        } else if (hypo === 'A') {
+            return 0.5
+        } else {
+            return 1
+        }
+    }
+}
+export { Pmf, Cookie, Monty, Suite, Monty2 }

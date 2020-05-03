@@ -11,7 +11,7 @@ import Icon24Forward10 from '@vkontakte/icons/dist/24/forward_10';
 // import AnyChart from 'anychart-react'
 // import iconv from 'iconv-lite'
 // import Parser from 'rss-parser'
-import { Pmf, Cookie,Monty } from './bayes'
+import { Pmf, Cookie, Monty, Suite, Monty2 } from './bayes'
 
 class App extends Component {
 	constructor(props) {
@@ -81,27 +81,34 @@ class App extends Component {
 			// cooc.normalize()
 			// cooc.prob('Bowl1')
 
-			let hypos = ['bowl11', 'bowl22'];
-			const mycooc = new Cookie(hypos)
+			// let hypos = ['bowl11', 'bowl22'];
+			// const mycooc = new Cookie(hypos)
 			// let dataset = ['vanilla', 'chocolate', 'vanilla']
-			let dataset = ['vanilla']
-			for (let data of dataset) {
-				console.log(`достаем ${data}`)
-				mycooc.update(data)
-				for (let hypo of hypos) {
-					mycooc.prob(hypo)
-				}
-			}
+			// // let dataset = ['vanilla']
+			// for (let data of dataset) {
+			// 	console.log(`достаем ${data}`)
+			// 	mycooc.update(data)
+			// 	for (let hypo of hypos) {
+			// 		mycooc.prob(hypo)
+			// 	}
+			// }
 
 			// console.log("вероятность "+"vanilla "+"bowl22 "+mycooc.likelyhood("vanilla","bowl22"))
 
-// 			let hypos = ['A', 'B','C'];
-// 			const monty = new Monty(hypos)
-// //вводим дверь которую открыл Монти B или С и получаем шансы на машину для дверей
-// 				monty.update('B')
-// 				for (let hypo of hypos) {
-// 					monty.prob(hypo)
-// 				}
+			// 			let hypos = ['A', 'B','C'];
+			// 			const monty = new Monty(hypos)
+			// //вводим дверь которую открыл Монти B или С и получаем шансы на машину для дверей
+			// 				monty.update('B')
+			// 				for (let hypo of hypos) {
+			// 					monty.prob(hypo)
+			// 				}
+
+			let hypos = ['A', 'B', 'C'];
+			let suite = new Monty2(hypos)
+			suite.update('B')
+			suite.print()
+
+
 			
 
 		} else {
