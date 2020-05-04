@@ -176,6 +176,33 @@ class Suite extends Pmf {
             this.prob(hypo)
         }
     }
+    /**
+        * выводит среднее вероятностное распределение
+        */
+    mean() {
+        let mu = 0;
+        for (let key in this.d) {
+            mu += this.d[key] * key
+        }
+        console.log(`среднее ${mu}`)
+        return mu
+    }
+    /**
+    * Возвращает границу доверительного интервала для процента
+    * @param {number} percent 0-100%
+    * @return {string} 
+    */
+    percentile(percent){
+        let p=percent/100
+        let total=0
+        for (let key in this.d) {
+            total += this.d[key]
+            if (total>=p){
+                // console.log(`персентили ${key}`)
+                return key
+            }
+        }        
+    }
 }
 
 class Monty2 extends Suite {
@@ -209,4 +236,69 @@ class M_and_M extends Suite {
         return like
     }
 }
-export { Pmf, Cookie, Monty, Suite, Monty2,M_and_M }
+// игральные кости
+class Dice extends Suite {
+    /**
+    * Возвращает (правдоподобие) получить определенную игральную кость 
+    * @param { number} data какая выпала сторона кости
+    * @param { number} hypo гипотеза какая игральная кость сколько у нее граней
+    * @return {number} вероятность получить игральную кость с количеством граней для гипотезы по сути правдоподобие
+    */
+    likelyhood(data, hypo) {
+        if (hypo < data) {//дверь которую открыли
+            return 0
+        } else {
+            return 1 / hypo
+        }
+    }
+}
+class Train extends Dice {
+    /**
+    * Возвращает массив чисел 
+    * @param { number} start начало массива
+    * @param { number} end конец массива
+    * @return {[number]} результат массив  
+    */
+    static range(start, end) {
+        let arr = [];
+        for (let i = start; i <= end; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }
+}
+class Train2 extends Dice {
+    constructor(hypos) {
+        super(hypos)//инициализируем родительский конструктор в котором создаем обьект d с вероятностями
+        for (let hypo of hypos) {
+            this.set(hypo, Math.pow(hypo, -1))
+        }
+        this.normalize()
+    }
+}
+class Euro extends Suite{
+  /**
+    * Возвращает (правдоподобие) получить решку 
+    * @param { string} data какая выпала сторона монеты 'H' or 'T'
+    * @param { number} hypo вероятности решки (0-100)
+    * @return {number} вероятность получить решку
+    */
+   likelyhood(data, hypo) {
+       let x=hypo/100
+    if (data = 'H') {//если решка
+        return x
+    } else {
+        return 1-x
+    }
+}
+static rangeSimbol(start, end,str) {
+    let arr = [];
+    for (let i = start; i <= end; i++) {
+        arr.push(str);
+    }
+    return arr;
+}
+}
+
+
+export { Pmf, Cookie, Monty, Suite, Monty2, M_and_M, Dice, Train, Train2, Euro}

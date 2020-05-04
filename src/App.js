@@ -11,7 +11,7 @@ import Icon24Forward10 from '@vkontakte/icons/dist/24/forward_10';
 // import AnyChart from 'anychart-react'
 // import iconv from 'iconv-lite'
 // import Parser from 'rss-parser'
-import { Pmf, Cookie, Monty, Suite, Monty2,M_and_M } from './bayes'
+import { Pmf, Cookie, Monty, Suite, Monty2, M_and_M, Dice, Train, Train2, Euro } from './bayes'
 
 class App extends Component {
 	constructor(props) {
@@ -108,11 +108,60 @@ class App extends Component {
 			// suite.update('B')
 			// suite.print()
 
-			let hypos = ['A', 'B'];
-			let suite = new M_and_M(hypos)
-			suite.update(['bag1','yellow'])
-			suite.update(['bag2','green'])
+			// let hypos = ['A', 'B'];
+			// let suite = new M_and_M(hypos)
+			// suite.update(['bag1','yellow'])
+			// suite.update(['bag2','green'])
+			// suite.print()
+
+			// let hypos = [4, 6, 8, 12, 20];
+			// let suite = new Dice(hypos)
+			// // console.log('после выпадения грани 6, вероятности какую кость мы бросали')
+			// // suite.update(6)			
+			// // suite.print()
+			// for (let roll of [6, 8, 7, 7, 5,4]) {
+			// 	suite.update(roll)
+			// }
+			// console.log('после выпадения грани 6, 8, 7, 7, 5, 4 вероятности какую кость мы бросали')
+			// suite.print()
+
+			// for (let prior of [500,1000,2000]){
+			// 	console.log('выбираем приор то есть сколько всего поездов '+prior)
+			// 	let hypos = Train.range(1,prior)
+			// 	let suite = new Dice(hypos)
+			// 	// suite.update(60)			
+			// 	// suite.print()
+			// 	// suite.mean()
+			// 	for (let roll of [60, 30,90]) {
+			// 			suite.update(roll)
+			// 		}
+			// 		console.log('после как увидели поезда № 60, 30,90 средняя вероятность количества поездов')
+			// 		suite.mean()
+			// }
+
+			// for (let prior of [500, 1000, 2000]) {
+			// 	console.log('выбираем приор то есть сколько всего поездов ' + prior)
+			// 	let hypos = Train.range(1, prior)
+			// 	// console.log(hypos)
+			// 	let suite = new Train2(hypos)
+			// 	for (let roll of [60, 30, 90]) {
+			// 		suite.update(roll)
+			// 	}
+			// 	console.log('после как увидели поезда № 60, 30,90 средняя вероятность количества поездов')
+			// 	suite.mean()
+			// 	console.log(`доверительный интервал ${suite.percentile(5)}, ${suite.percentile(95)}`)
+			// }
+
+			let hypos = Train.range(1, 100)
+			const suite = new Euro(hypos)
+			let dataset = Euro.rangeSimbol(1, 140, 'H')
+			dataset = dataset.concat(Euro.rangeSimbol(1, 110, 'T'))
+			// console.log(dataset)
+			for (let data of dataset) {
+				suite.update(data)
+			}
 			suite.print()
+
 
 
 		} else {
