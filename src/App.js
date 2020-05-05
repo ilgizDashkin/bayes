@@ -12,6 +12,7 @@ import Icon24Forward10 from '@vkontakte/icons/dist/24/forward_10';
 // import iconv from 'iconv-lite'
 // import Parser from 'rss-parser'
 import { Pmf, Cookie, Monty, Suite, Monty2, M_and_M, Dice, Train, Train2, Euro } from './bayes'
+import AnyChart from 'anychart-react'//
 
 class App extends Component {
 	constructor(props) {
@@ -28,6 +29,7 @@ class App extends Component {
 			green2: '',
 			posterior1: null,
 			posterior2: null,
+			dataGraf:[1,1]
 		}
 	}
 
@@ -152,16 +154,24 @@ class App extends Component {
 			// 	console.log(`доверительный интервал ${suite.percentile(5)}, ${suite.percentile(95)}`)
 			// }
 
-			let hypos = Train.range(1, 100)
+			let hypos = Euro.range(1, 100)
+			// console.log(hypos)
 			const suite = new Euro(hypos)
+			// suite.print()
 			let dataset = Euro.rangeSimbol(1, 140, 'H')
 			dataset = dataset.concat(Euro.rangeSimbol(1, 110, 'T'))
 			// console.log(dataset)
-			for (let data of dataset) {
-				suite.update(data)
+			for (let d of dataset) {
+				suite.update(d)
 			}
-			suite.print()
-
+			// suite.print()
+			console.log(suite.maxLikelyhood())
+			console.log(suite.mean())
+			console.log('медиана '+suite.percentile(50))
+			console.log(`доверительный интервал ${suite.percentile(5)}, ${suite.percentile(95)}`)
+			suite.prob(50)
+			// console.log(suite.grafData())
+			this.setState({dataGraf:suite.grafData()})
 
 
 		} else {
@@ -217,6 +227,7 @@ class App extends Component {
 			<View id="view" activePanel="panel">
 				<Panel id="panel">
 					<PanelHeader>задачи на теорию Байеса</PanelHeader>
+					<AnyChart type="area" data={this.state.dataGraf} title="My Chart Title" legend="true"/>
 					<Group header={<Header mode="secondary">задача о булочках</Header>}>
 						<FormLayout align="center">
 							<CardGrid>
